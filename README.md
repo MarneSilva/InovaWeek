@@ -98,7 +98,7 @@ Cada grupo é identificado pelo seu id, em todos os campos que forem relacionado
 ## Modelo Projeto
 Cada projeto é identificado pelo seu id, em todos os campos que forem relacionados, e seu id é o número do stand que eles foram selecionados para apresentar. Cada projeto possui seu nome, a data na qual ele vai ser apresentado, e um grupo associado, do qual o projeto faz parte. A relação projeto-grupo é de 1:1.
 
-## Modelo Avaliaçao
+## Modelo Avaliacao
 Cada avaliação é identificada por seu id, em todos os campos que forem relacionadas. Como cada professor ou aluno pode fazer uma avaliação de um dado projeto do InovaWeek, o modelo de avaliação precisa ter campos que expressem notas de acordo com os critérios do InovaWeek. De acordo com os critérios oficiais para a avaliação de um projeto do Inova, divulgado pela própria universidade, os critérios são:
 - Maturidade
 - Inovação
