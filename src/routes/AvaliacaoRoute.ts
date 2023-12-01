@@ -5,4 +5,8 @@ const AvaliacaoRouter = Router();
 
 AvaliacaoRouter.get('/avaliacoes', AvaliacaoController.listAvaliacao);
 
+AvaliacaoRouter.post("/avaliacoes/create", AvaliacaoController.createAvaliacao);
+
+AvaliacaoRouter.delete("/avaliacoes/delete/:idAvaliacao", AvaliacaoController.deleteAvaliacao);
+
 export default AvaliacaoRouter;

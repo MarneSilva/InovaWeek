@@ -27,7 +27,59 @@
         }
     </style>
 </head>
+<script>
+    function createAvaliacao(){
+        const maturidade = document.getElementById("inputMaturidade").value;
+        const inovacao = document.getElementById("inputInovacao").value;
+        const apresentacao = document.getElementById("inputApresentacao").value;
+        const atratividade = document.getElementById("inputAtratividade").value;
+        const notaFinal = document.getElementById("inputNotaFinal").value;
+        const idAvaliacao = document.getElementById("inputIdAvaliacao").value;
+        const alunoId = document.getElementById("inputIdAluno").value;
+        const professorId =document.getElementById("inputIdProfessor").value;
+        if (alunoId !== "" || professorId !== "") {
+        const body = JSON.stringify({
+                maturidade: maturidade,
+                inovacao: inovacao,
+                apresentacao: apresentacao,
+                atratividade: atratividade,
+                notaFinal: notaFinal,
+                idAvaliacao: idAvaliacao,
+                alunoId: alunoId,
+                professorId: professorId
+            })
 
+            fetch("/avaliacoes/create", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: body
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/avaliacoes';
+                } else {
+                    console.error('Erro ao criar avaliação:', response.statusText);
+                }
+            });
+        }
+    }
+
+    function deleteAvaliacao(idAvaliacao)   {
+        fetch(`/avaliacoes/delete/${idAvaliacao}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/avaliacoes';
+            } else {
+                console.error('Erro ao deletar avaliação:', response.statusText);
+            }
+        });
+    }
+</script>
 <body style="display: flex; align-items: center ; justify-content: center; flex-direction: column">
     <h1>Lista de avaliações</h1>
     <table>
@@ -68,9 +120,8 @@
                     <td>
                         <%= avaliacoes[i].notaFinal %>
                     </td>
-                    <td><button class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-user-plus"></i></button>
-                        <button class="btn"><i class="fa fa-user-times"></i></button>
-                        <button class="btn"><i class="fa fa-user-secret"></i></button>
+                    <td><button class="btn" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-user-plus"></i></button>
+                        <button class="btn"><i class="fa fa-user-times" onclick="deleteAvaliacao('<%= avaliacoes[i].idAvaliacao%>')"></i></button>
                     </td>
                 </tr>
                 <% } %>
@@ -78,7 +129,7 @@
     </table>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -89,32 +140,40 @@
                     <form>
                         <div class="mb-3">
                           <label for="exampleInputNumber1" class="form-label">idAvaliação</label>
-                          <input type="number" class="form-control" id="exampleInputNumber1">
+                          <input type="number" class="form-control" id="inputIdAvaliacao">
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputNumber1" class="form-label">idAluno</label>
+                          <input type="number" class="form-control" id="inputIdAluno">
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputNumber1" class="form-label">idProfessor</label>
+                          <input type="number" class="form-control" id="inputIdProfessor">
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputNumber1" class="form-label">Maturidade</label>
-                            <input type="number" class="form-control" id="exampleInputNumber1">
+                            <input type="number" class="form-control" id="inputMaturidade">
                           </div>
                           <div class="mb-3">
                               <label for="exampleInputNumber1" class="form-label">Inovação</label>
-                              <input type="number" class="form-control" id="exampleInputNumber1">
+                              <input type="number" class="form-control" id="inputInovacao">
                             </div>
                             <div class="mb-3">
                               <label for="exampleInputNumber1" class="form-label">Apresentação</label>
-                              <input type="number" class="form-control" id="exampleInputNumber1">
+                              <input type="number" class="form-control" id="inputApresentacao">
                             </div>
                             <div class="mb-3">
                               <label for="exampleInputNumber1" class="form-label">Atratividade</label>
-                              <input type="number" class="form-control" id="exampleInputNumber1">
+                              <input type="number" class="form-control" id="inputAtratividade">
                             </div><div class="mb-3">
                                 <label for="exampleInputNumber1" class="form-label">notaFinal</label>
-                                <input type="number" class="form-control" id="exampleInputNumber1">
+                                <input type="number" class="form-control" id="inputNotaFinal">
                               </div>
                       </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar Avaliação</button>
+                    <button type="button" class="btn btn-primary" onclick="createAvaliacao()">Salvar Avaliação</button>
                 </div>
             </div>
         </div>

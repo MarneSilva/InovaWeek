@@ -27,7 +27,47 @@
         }
     </style>
 </head>
+<script>
+    function createProjeto(){
+        const nome = document.getElementById("inputNome").value;
+        const idProjeto = document.getElementById("inputProjetoId").value;
 
+       const body = JSON.stringify({
+            nome: nome,
+            idProjeto: idProjeto
+        })
+
+        fetch("/projetos/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/projetos';
+            } else {
+                console.error('Erro ao criar projeto:', response.statusText);
+            }
+        });
+    }
+
+    function deleteProjeto(idProjeto){
+
+    fetch(`/projetos/delete/${idProjeto}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then(response => {
+        if (response.ok) {
+            window.location.href = '/projetos';
+        } else {
+            console.error('Erro ao deletar projeto:', response.statusText);
+        }
+    });
+}
+</script>
 <body style="display: flex; align-items: center ; justify-content: center; flex-direction: column">
     <h1>Lista de projetos</h1>
     <table>
@@ -35,7 +75,6 @@
             <th>idProjeto</th>
             <th>Data</th>
             <th>Nome</th>
-            <th>Grupo</th>
             <th>Ações</th>
         </thead>
         <tbody>
@@ -50,19 +89,15 @@
                         <%= projetos[i].nome %>
                     </td>
                     <td>
-                        <%= projetos[i].grupo %>
-                    </td>
-                    <td><button class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-user-plus"></i></button>
-                        <button class="btn"><i class="fa fa-user-times"></i></button>
-                        <button class="btn"><i class="fa fa-user-secret"></i></button>
-                    </td>
+                        <button class="btn" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-user-plus"></i></button>
+                        <button class="btn"><i class="fa fa-user-times" onclick="deleteProjeto('<%= projetos[i].idProjeto%>')"></i></button>
+                    </td>    
                 </tr>
                 <% } %>
         </tbody>
     </table>
-
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,21 +108,17 @@
                     <form>
                         <div class="mb-3">
                           <label for="exampleInputNumber1" class="form-label">idProjeto</label>
-                          <input type="number" class="form-control" id="exampleInputNumber1">
+                          <input type="number" class="form-control" id="inputProjetoId">
                         </div>
                         <div class="mb-3">
-                            <label for="exampleInputDateTime1" class="form-label">Data</label>
-                            <input type="datetime" class="form-control" id="exampleInputDateTime1">
-                          </div>
-                        <div class="mb-3">
                             <label for="exampleInputText1" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="exampleInputText">
+                            <input type="text" class="form-control" id="inputNome">
                         </div>
                       </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar Projeto</button>
+                    <button type="button" class="btn btn-primary" onclick="createProjeto()">Salvar Projeto</button>
                 </div>
             </div>
         </div>

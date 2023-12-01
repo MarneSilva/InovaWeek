@@ -27,18 +27,32 @@ class GrupoController{
         const grupos = await GrupoService.listGrupo();
 
         res.render('grupos', {grupos: grupos})
-        res.status(200).json({
-            status: 'ok',
-            grupos: grupos
-        })
     }
 
     async updateGrupo(req: Request, res: Response){
-        res.send('Update Grupo');
+        try {
+            const idGrupo = req.params.idGrupo;
+            const data: Prisma.GrupoUpdateInput = req.body;
+
+            const grupo = await GrupoService.updateGrupo(idGrupo, data);
+
+            return res.json(grupo);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 
     async deleteGrupo(req: Request, res: Response){
-        res.send('Delete Grupo');
+        try {
+            const grupoDados: string = req.params.idGrupo;
+            const grupo = await GrupoService.deleteGrupo(grupoDados);
+
+            return res.json(grupo);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 }
 

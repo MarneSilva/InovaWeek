@@ -27,10 +27,6 @@ class ProfessorController{
         const professores = await ProfessorService.listProfessor();
 
         res.render('professores', {professores: professores})
-        res.status(200).json({
-            status: 'ok',
-            professores: professores
-        })
     }
 
     async updateProfessor(req: Request, res: Response){
@@ -38,7 +34,15 @@ class ProfessorController{
     }
 
     async deleteProfessor(req: Request, res: Response){
-        res.send('Delete Professor');
+        try {
+            const professorDados: string = req.params.idProfessor;
+            const professor = await ProfessorService.deleteProfessor(professorDados);
+
+            return res.json(professor);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 }
 

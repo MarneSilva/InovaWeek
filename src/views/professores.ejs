@@ -27,14 +27,52 @@
         }
     </style>
 </head>
+<script>
+    function createProfessor(){
+        const idProfessor = document.getElementById("inputIdProfessor").value;
+        const nome = document.getElementById("inputNome").value;
 
+       const body = JSON.stringify({
+            idProfessor: idProfessor,
+            nome: nome,
+        })
+
+        fetch("/professores/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/professores';
+            } else {
+                console.error('Erro ao criar professor:', response.statusText);
+            }
+        });
+    }
+    function deleteProfessor(idProfessor){
+
+        fetch(`/professores/delete/${idProfessor}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/professores';
+            } else {
+                console.error('Erro ao deletar professor:', response.statusText);
+            }
+        });
+    }
+</script>
 <body style="display: flex; align-items: center ; justify-content: center; flex-direction: column">
     <h1>Lista de professores</h1>
     <table>
         <thead>
             <th>IdProfessor</th>
             <th>Nome</th>
-            <th>Avaliação</th>
             <th>Ações</th>
         </thead>
         <tbody>
@@ -46,19 +84,16 @@
                         <%= professores[i].nome %>
                     </td>
                     <td>
-                        <%= professores[i].avaliacao %>
-                    </td>
-                    <td><button class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-user-plus"></i></button>
-                        <button class="btn"><i class="fa fa-user-times"></i></button>
-                        <button class="btn"><i class="fa fa-user-secret"></i></button>
+                        <button class="btn" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-user-plus"></i></button>
+                        <button class="btn"><i class="fa fa-user-times" onclick="deleteProfessor('<%= professores[i].idProfessor%>')"></i></button>
                     </td>
                 </tr>
                 <% } %>
         </tbody>
     </table>
-
+    
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -69,17 +104,17 @@
                     <form>
                         <div class="mb-3">
                           <label for="exampleInputNumber1" class="form-label">idProfessor</label>
-                          <input type="number" class="form-control" id="exampleInputNumber1">
+                          <input type="number" class="form-control" id="inputIdProfessor">
                         </div>
                         <div class="mb-3">
                           <label for="exampleInputText1" class="form-label">Nome</label>
-                          <input type="text" class="form-control" id="exampleInputText1">
+                          <input type="text" class="form-control" id="inputNome">
                         </div>
                       </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar Professor</button>
+                    <button type="button" class="btn btn-primary" onclick="createProfessor()">Salvar Professor</button>
                 </div>
             </div>
         </div>

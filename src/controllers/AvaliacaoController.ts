@@ -27,18 +27,33 @@ class AvaliacaoController{
         const avaliacoes = await AvaliacaoService.listAvaliacao();
 
         res.render('avaliacoes', {avaliacoes: avaliacoes})
-        res.status(200).json({
-            status: 'ok',
-            avaliacoes: avaliacoes
-        })
     }
 
     async updateAvaliacao(req: Request, res: Response){
-        res.send('Update Avaliacao');
+        try {
+            const idAvaliacao = req.params.idAvaliacao;
+            const data: Prisma.AvaliacaoUpdateInput = req.body;
+
+            const avaliacao = await AvaliacaoService.updateAvaliacao(idAvaliacao, data);
+
+            return res.json(avaliacao);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 
     async deleteAvaliacao(req: Request, res: Response){
-        res.send('Delete Avaliacao');
+        try {
+            const avaliacaoDados: string = req.params.idAvaliacao;
+            const avaliacao = await AvaliacaoService.deleteAvaliacao(avaliacaoDados);
+            console.log(avaliacaoDados)
+
+            return res.json(avaliacao);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 }
 

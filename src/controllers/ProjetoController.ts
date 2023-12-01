@@ -27,18 +27,32 @@ class ProjetoController{
         const projetos = await ProjetoService.listProjeto();
 
         res.render('projetos', {projetos: projetos})
-        res.status(200).json({
-            status: 'ok',
-            Projetos: projetos
-        })
     }
 
     async updateProjeto(req: Request, res: Response){
-        res.send('Update projeto');
+        try {
+            const idProjeto = req.params.idProjeto;
+            const data: Prisma.ProjetoUpdateInput = req.body;
+
+            const projeto = await ProjetoService.updateProjeto(idProjeto, data);
+
+            return res.json(projeto);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 
     async deleteProjeto(req: Request, res: Response){
-        res.send('Delete projeto');
+        try {
+            const projetoDados: string = req.params.idProjeto;
+            const projeto = await ProjetoService.deleteProjeto(projetoDados);
+
+            return res.json(projeto);
+        }   catch(error){
+            console.log(error);
+            return res.json(400);
+        }
     }
 }
 

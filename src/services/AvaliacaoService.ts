@@ -50,7 +50,6 @@ class AvaliacaoService {
                     idAvaliacao
                 }
             });
-
             return deletedAvaliacao;
         }catch(error){
             console.log(error);

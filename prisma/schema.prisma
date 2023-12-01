@@ -45,11 +45,11 @@ model Avaliacao {
   professorId  String?
   aluno        Aluno?     @relation(fields: [alunoId], references: [matricula])
   alunoId      String?
-  notaFinal    Float
-  maturidade   Float
-  inovacao     Float
-  apresentacao Float
-  atratividade Float
+  notaFinal    String
+  maturidade   String
+  inovacao     String
+  apresentacao String
+  atratividade String
   
   @@map("Avaliacao")
 }

@@ -27,13 +27,51 @@
         }
     </style>
 </head>
+<script>
+    function createGrupo(){
+        const projetoId = document.getElementById("inputProjetoId").value;
+        const idGrupo = document.getElementById("inputGrupoId").value;
 
+       const body = JSON.stringify({
+            projetoId : projetoId,
+            idGrupo : idGrupo
+        })
+
+        fetch("/grupos/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/grupos';
+            } else {
+                console.error('Erro ao criar grupo:', response.statusText);
+            }
+        });
+    }
+    function deleteGrupo(idGrupo){
+
+        fetch(`/grupos/delete/${idGrupo}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/grupos';
+            } else {
+                console.error('Erro ao deletar grupo:', response.statusText);
+            }
+        });
+    }
+</script>
 <body style="display: flex; align-items: center ; justify-content: center; flex-direction: column">
     <h1>Lista de grupos</h1>
     <table>
         <thead>
             <th>IdGrupo</th>
-            <th>Integrantes</th>
             <th>ProjetoID</th>
             <th>Ações</th>
         </thead>
@@ -44,22 +82,17 @@
                         <%= grupos[i].idGrupo %>
                     </td>
                     <td>
-                        <%= grupos[i].integrantes %>
-                    </td>
-                    <td>
                         <%= grupos[i].projetoId %>
                     </td>
-                    <td><button class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-user-plus"></i></button>
-                        <button class="btn"><i class="fa fa-user-times"></i></button>
-                        <button class="btn"><i class="fa fa-user-secret"></i></button>
+                    <td>
+                        <button class="btn" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-user-plus"></i></button>
+                        <button class="btn"><i class="fa fa-user-times" onclick="deleteGrupo('<%= grupos[i].idGrupo%>')"></i></button>
                     </td>
                 </tr>
                 <% } %>
         </tbody>
-    </table>
-
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -69,18 +102,18 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                          <label for="exampleInputNumber1" class="form-label">idGrupo</label>
-                          <input type="number" class="form-control" id="exampleInputNumber1">
+                          <label for="exampleInputNumber1" class="form-label">GrupoId</label>
+                          <input type="number" class="form-control" id="inputGrupoId">
                         </div>
                         <div class="mb-3">
                           <label for="exampleInputNumber1" class="form-label">projetoId</label>
-                          <input type="number" class="form-control" id="exampleInputNumber1">
+                          <input type="number" class="form-control" id="inputProjetoId">
                         </div>
                       </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar grupos</button>
+                    <button type="button" class="btn btn-primary" onclick="createGrupo()">Salvar grupos</button>
                 </div>
             </div>
         </div>

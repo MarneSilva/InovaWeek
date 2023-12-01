@@ -27,7 +27,75 @@
         }
     </style>
 </head>
+<script>
+    function createAluno(){
+        const matricula = document.getElementById("inputMatricula").value;
+        const nome = document.getElementById("inputNome").value;
+        const grupoId = document.getElementById("inputGrupoId").value;
 
+       const body = JSON.stringify({
+            matricula: matricula,
+            nome: nome,
+            grupoId: grupoId
+        })
+
+        fetch("/aluno/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/alunos';
+            } else {
+                console.error('Erro ao criar aluno:', response.statusText);
+            }
+        });
+    }
+
+    function updateAluno(matricula){
+        const nome = document.getElementById("inputNome").value;
+        const grupoId = document.getElementById("inputGrupoId").value;
+
+       const body = JSON.stringify({
+            matricula: matricula,
+            nome: nome,
+            grupoId: grupoId
+        })
+
+        fetch(`/aluno/update/${matricula}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/alunos';
+            } else {
+                console.error('Erro ao atualizar aluno:', response.statusText);
+            }
+        });
+    }
+
+
+    function deleteAluno(matricula){
+
+        fetch(`/aluno/delete/${matricula}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/alunos';
+            } else {
+                console.error('Erro ao deletar aluno:', response.statusText);
+            }
+        });
+    }
+</script>
 <body style="display: flex; align-items: center ; justify-content: center; flex-direction: column">
     <h1>Lista de alunos</h1>
     <table>
@@ -35,8 +103,6 @@
             <th>Matrícula</th>
             <th>Nome</th>
             <th>GrupoId</th>
-            <th>Avaliação</th>
-            <th>Líder</th>
             <th>Ações</th>
         </thead>
         <tbody>
@@ -51,14 +117,8 @@
                         <%= alunos[i].grupoId %>
                     </td>
                     <td>
-                        <%= alunos[i].avaliacao %>
-                    </td>
-                    <td>
-                        <%= alunos[i].lider %>
-                    </td>
-                    <td><button class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-user-plus"></i></button>
-                        <button class="btn"><i class="fa fa-user-times"></i></button>
-                        <button class="btn"><i class="fa fa-user-secret"></i></button>
+                        <button class="btn" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-user-plus"></i></button>
+                        <button class="btn"><i class="fa fa-user-times" onclick="deleteAluno('<%= alunos[i].matricula%>')"></i></button>
                     </td>
                 </tr>
                 <% } %>
@@ -66,7 +126,7 @@
     </table>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -77,29 +137,27 @@
                     <form>
                         <div class="mb-3">
                             <label for="exampleInputNumber1" class="form-label">Matricula</label>
-                            <input type="number" class="form-control" id="exampleInputNumber1">
+                            <input type="number" class="form-control" id="inputMatricula">
                           </div>
                         <div class="mb-3">
                           <label for="exampleInputText1" class="form-label">Nome</label>
-                          <input type="text" class="form-control" id="exampleInputText1">
+                          <input type="text" class="form-control" id="inputNome">
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputNumber1" class="form-label">grupoId</label>
-                            <input type="number" class="form-control" id="exampleInputNumber1">
+                            <input type="number" class="form-control" id="inputGrupoId">
                           </div>
-                        <div class="mb-3">
-                            <label for="exampleCheckbox1" class="form-label">Líder</label>
-                            <input type="checkbox" class="form-control" id="exampleInputCheckbox1">
-                        </div>  
                       </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar Aluno</button>
+                    <button type="submit" class="btn btn-primary" onclick="createAluno()">Salvar Aluno</button>
                 </div>
             </div>
         </div>
     </div>
+    
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
